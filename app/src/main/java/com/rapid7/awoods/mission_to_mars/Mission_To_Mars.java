@@ -1,9 +1,9 @@
 package com.rapid7.awoods.mission_to_mars;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
 
-public class Mission_To_Mars extends AppCompatActivity {
+public class Mission_To_Mars extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
