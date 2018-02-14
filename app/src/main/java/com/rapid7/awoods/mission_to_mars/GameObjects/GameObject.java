@@ -9,6 +9,7 @@ public abstract class GameObject {
     private double width;
     private double height;
     private boolean isDraw;
+    private boolean isTouchable;
 
     public GameObject(String image, PositionVector position, String name, double width, double height) {
 
@@ -18,9 +19,37 @@ public abstract class GameObject {
         this.name = name;
         this.width = width;
         this.height = height;
+        this.isTouchable = false;
     }
 
+    public GameObject(String image, PositionVector position, String name, double width,
+                      double height, boolean isTouchable) {
+
+
+        this.image = image;
+        this.position = position;
+        this.name = name;
+        this.width = width;
+        this.height = height;
+        this.isTouchable = isTouchable;
+    }
+
+    public abstract void onTouched();
     public void draw(){};
+
+    public boolean containsPoint(PositionVector queryPosition){
+
+        // check y
+        if((position.y + height) < queryPosition.y && position.y < queryPosition.y) {
+
+            // check x
+            if((position.x + width) < queryPosition.x && position.x < queryPosition.x) {
+                return true;
+            }
+        }
+
+        return false;
+        }
 
 
     public String getImage() {
@@ -69,5 +98,13 @@ public abstract class GameObject {
 
     public void setDraw(boolean draw) {
         isDraw = draw;
+    }
+
+    public boolean isTouchable() {
+        return isTouchable;
+    }
+
+    public void setTouchable(boolean touchable) {
+        isTouchable = touchable;
     }
 }

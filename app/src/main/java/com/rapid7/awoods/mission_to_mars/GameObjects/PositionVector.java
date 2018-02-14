@@ -3,10 +3,10 @@ package com.rapid7.awoods.mission_to_mars.GameObjects;
 
 public class PositionVector {
 
-    public double x;
-    public double y;
+    public float x;
+    public float y;
 
-    public PositionVector(double x, double y){
+    public PositionVector(float x, float y){
         this.x = x;
         this.y = y;
     }
