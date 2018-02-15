@@ -16,7 +16,7 @@ public abstract class GameObject {
     private String name;
     private float width;
     private float height;
-    private boolean isDraw;
+    private boolean isDraw = true;
     private boolean isTouchable;
     private int rows;
     private int columns;
@@ -65,8 +65,10 @@ public abstract class GameObject {
     public abstract void onTouched();
     public abstract void onReleased();
     public void draw(Canvas canvas, Paint paint){
-        canvas.drawBitmap(image, position.x, position.y, paint);
-    };
+        if(isDraw) {
+            canvas.drawBitmap(image, position.x, position.y, paint);
+        }
+    }
 
     public boolean containsPoint(PositionVector queryPosition){
 

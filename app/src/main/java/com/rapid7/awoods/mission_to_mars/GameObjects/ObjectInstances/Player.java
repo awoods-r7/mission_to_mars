@@ -75,13 +75,13 @@ public class Player extends LivingObject{
         }
     }
     @Override
-    public void update() {
+    public void update(float limit) {
         if (pressingRight){
             moveRight();
         }
 
         if (pressingLeft){
-            moveLeft();
+            moveLeft(limit);
         }
 
 
@@ -97,7 +97,7 @@ public class Player extends LivingObject{
 
     }
 
-    private void addTool(Tool tool) {
+    public void addTool(Tool tool) {
         tools.add(tool);
     }
 
@@ -112,13 +112,18 @@ public class Player extends LivingObject{
 
     }
 
-    public void moveLeft(){
+    public void moveLeft(float limit){
         Log.i("player", "Moving left");
         PositionVector currentPosition = getPosition();
         PositionVector newPosition = new PositionVector(currentPosition.x - getSpeed(),
                 currentPosition.y);
 
-        setPosition(newPosition);
+        if (newPosition.x>limit) {
+            setPosition(newPosition);
+        }
+        else {
+            setMoving(false);
+        }
 
     }
 
