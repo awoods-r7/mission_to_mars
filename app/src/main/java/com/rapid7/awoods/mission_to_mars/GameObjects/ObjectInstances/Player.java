@@ -21,6 +21,10 @@ public class Player extends LivingObject{
     Bitmap image;
     boolean moving, gun;
     Bitmap currentBitmap;
+    float width, height;
+    int i = 0;
+    int frame = 0;
+    int rows, columns;
 
     public Player(Context context, int resourceId, int rows, int columns, PositionVector position,
                   String name, float width, float height, float speed, int health) {
@@ -28,7 +32,11 @@ public class Player extends LivingObject{
         image = BitmapFactory.decodeResource(context.getResources(), resourceId);
         cutSprites(image, rows, columns);
         moving = true;
-        gun = true;
+        //gun = true;
+        this.rows = rows;
+        this.columns = columns;
+        this.width = width;
+        this.height = height;
 
     }
 
@@ -38,10 +46,10 @@ public class Player extends LivingObject{
         if (moving == true) {
             //moving so keep updating the frame
             if (gun == true) {
-                currentBitmap = animations.get(1)[0];
+                currentBitmap = animations.get(1)[getCurrentFrame(columns)];
             }
             else {
-                currentBitmap = animations.get(0)[0];
+                currentBitmap = animations.get(0)[getCurrentFrame(columns)];
             }
         }
         //if still just grab the first frame
@@ -53,7 +61,8 @@ public class Player extends LivingObject{
                 currentBitmap = animations.get(0)[0];
             }
         }
-        canvas.drawBitmap(currentBitmap, getWidth()/2, getHeight()/2, paint);
+        currentBitmap = Bitmap.createScaledBitmap(currentBitmap, 200, 200, true);
+        canvas.drawBitmap(currentBitmap, 750, 700, paint);
     }
     @Override
     public void update() {
@@ -122,5 +131,17 @@ public class Player extends LivingObject{
             animations.add(bitmapArray);
 
         }
+    }
+    public int getCurrentFrame(int noOfFrames)
+    {
+        if (i > 3)
+        {
+            i = 0;
+            frame++;
+            frame = frame % noOfFrames;
+            return frame;
+        }
+        i++;
+        return frame;
     }
 }

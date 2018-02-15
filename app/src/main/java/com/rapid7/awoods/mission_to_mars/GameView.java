@@ -32,7 +32,7 @@ public class GameView extends SurfaceView implements Runnable{
     private Paint paint;
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
-    Bitmap bitmap;
+    Bitmap bitmap, background, rocket;
     Player player;
     ArrayList<GameObject> gameObjects = new ArrayList<>();
     private InputManager inputManager;
@@ -44,10 +44,17 @@ public class GameView extends SurfaceView implements Runnable{
         paint = new Paint();
         this.setTop(screenY);
         this.setLeft(screenX);
+        //adding landscape
+        background = BitmapFactory.decodeResource(context.getResources(), R.drawable.backgroundmars);
+        background = Bitmap.createScaledBitmap(background, 4800, screenY, true);
 
-        player = new Player(context, R.drawable.main_player, 2, 5, new PositionVector(500,500), "", 10,10,0,1);
-        Movementbutton test = new Movementbutton(context, R.drawable.blank_button, new PositionVector(0,0), "", 500, 500, player, true);
-        gameObjects.add(test);
+        //adding rocket
+        rocket = BitmapFactory.decodeResource(context.getResources(), R.drawable.crashed_rocket);
+        rocket = Bitmap.createScaledBitmap(rocket, 500, 900, true);
+
+        player = new Player(context, R.drawable.main_player, 2, 4, new PositionVector(500,500), "", 10,10,0,1);
+        //Movementbutton test = new Movementbutton(context, R.drawable.blank_button, new PositionVector(0,0), "", 500, 500, player, true);
+        //gameObjects.add(test);
         inputManager = new InputManager(gameObjects, this);
     }
 
@@ -69,17 +76,21 @@ public class GameView extends SurfaceView implements Runnable{
             canvas = surfaceHolder.lockCanvas();
             canvas.drawColor(Color.WHITE);
             //make the man runnnnnnnnnnnnnnn
-            player.draw(canvas, paint);
-            //canvas.drawBitmap(
-                    //player.getBitmap(),
-                    //player.getX(),
-                    //player.getY(),
-                    //paint);
-            for (GameObject object: gameObjects) {
-                paint.setColor(Color.BLACK);
-                object.draw(canvas, paint);
 
-            }
+            //adding background
+            canvas.drawBitmap(background, 0, 0, paint);
+
+            //adding rocket
+            canvas.drawBitmap(rocket, 0, -26, paint);
+
+            player.draw(canvas, paint);
+
+
+    //        for (GameObject object: gameObjects) {
+      //          paint.setColor(Color.BLACK);
+  //              object.draw(canvas, paint);
+//
+            //}
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
     }
