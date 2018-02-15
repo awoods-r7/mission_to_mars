@@ -15,7 +15,7 @@ public abstract class MovingObject extends GameObject {
         this.speed = speed;
     }
 
-    public abstract void update();
+    public abstract void update(float limit);
 
 
     public float getSpeed() {
