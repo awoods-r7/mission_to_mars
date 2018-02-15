@@ -37,25 +37,33 @@ public class GameView extends SurfaceView implements Runnable{
 
     ArrayList<GameObject> allObjects;
     ArrayList<GameObject> touchableObjects;
+    ArrayList<GameObject> ui;
     ArrayList<MovingObject> movableObjects;
     Player player;
+
+    float screenX;
+    float screenY;
+    float ratio;
 
     public GameView(Context context, float screenX, float screenY) {
         super(context);
         resume();
         surfaceHolder = getHolder();
         paint = new Paint();
+        this.screenX = screenX;
+        this.screenY = screenY;
 
         allObjects = new ArrayList<>();
         touchableObjects = new ArrayList<>();
         movableObjects = new ArrayList<>();
+        ui = new ArrayList<>();
 
 
         player = new Player(context, R.drawable.blank_button, new PositionVector(0,30), "", 100,100,1,1);
 
         // Create buttons/ ui
 
-        float ratio = screenX/screenY;
+        ratio = screenX/screenY;
         float buttonWidth = 120 * ratio;
         float buttonPaddingWidth = 20 * ratio;
         float buttonPaddingHeight = 20 * ratio;
@@ -73,10 +81,12 @@ public class GameView extends SurfaceView implements Runnable{
 
         inputManager = new InputManager(touchableObjects, this, new PositionVector(screenX, screenY));
 
+        touchableObjects.add(leftButton);
+        ui.add(rightButton);
         // Set up draw objects
 
-        allObjects.addAll(touchableObjects);
-        allObjects.add(player);
+
+        //allObjects.addAll(touchableObjects);
     }
 
     @Override
@@ -98,12 +108,19 @@ public class GameView extends SurfaceView implements Runnable{
             canvas = surfaceHolder.lockCanvas();
             canvas.drawColor(Color.WHITE);
 
-            for (GameObject object: allObjects) {
+            for (GameObject uiObject:ui) {
+                uiObject.draw(canvas, paint);
+            }
+            canvas.translate(-player.getPosition().x, 0);
+            
+            for (GameObject object: touchableObjects) {
                 paint.setColor(Color.BLACK);
                 object.draw(canvas, paint);
 
             }
             player.update();
+            canvas.translate(0, 0);
+            player.draw(canvas, paint);
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
 
