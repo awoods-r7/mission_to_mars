@@ -10,6 +10,14 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.rapid7.awoods.mission_to_mars.GameObjects.Button;
+import com.rapid7.awoods.mission_to_mars.GameObjects.GameObject;
+import com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances.Movementbutton;
+import com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances.Player;
+import com.rapid7.awoods.mission_to_mars.GameObjects.PositionVector;
+
+import java.util.ArrayList;
+
 /**
  * Created by awoods on 14/02/18.
  */
@@ -24,14 +32,24 @@ public class GameView extends SurfaceView implements Runnable{
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
     Bitmap bitmap;
+    ArrayList<GameObject> gameObjects = new ArrayList<>();
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
+        resume();
         //player = new Player(context, screenX, screenY);
         //bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
         //canvas.drawBitmap(bitmap, 50, 50, paint);
         surfaceHolder = getHolder();
         paint = new Paint();
+
+        //BACKGROUND IMAGE
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.backgroundmars);
+        bitmap = Bitmap.createScaledBitmap(bitmap, 4800, screenY, true);
+
+        Player player = new Player(context, R.drawable., new PositionVector(0,0), "", 100,100,0,1);
+        Movementbutton test = new Movementbutton("", new PositionVector(0,0), "", 550, 510, player, true);
+        gameObjects.add(test);
     }
 
     @Override
@@ -50,13 +68,18 @@ public class GameView extends SurfaceView implements Runnable{
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
             canvas = surfaceHolder.lockCanvas();
-            canvas.drawColor(Color.BLACK);
+            canvas.drawColor(Color.WHITE);
 
-            //canvas.drawBitmap(
+            canvas.drawBitmap(
+                    bitmap, 0, 0, paint);
                     //player.getBitmap(),
                     //player.getX(),
                     //player.getY(),
                     //paint);
+            for (GameObject object: gameObjects) {
+                object.draw(canvas);
+
+            }
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
     }
