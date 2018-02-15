@@ -91,8 +91,8 @@ public class GameView extends SurfaceView implements Runnable{
         float buttonWidth = 110 * ratio;
         float buttonPaddingWidth = 20 * ratio;
         float buttonPaddingHeight = 20 * ratio;
-        Movementbutton leftButton = new Movementbutton(context, R.drawable.blank_button, new PositionVector(buttonPaddingWidth,screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "left", buttonWidth, buttonWidth, player, false);
-        Movementbutton rightButton = new Movementbutton(context, R.drawable.blank_button, new PositionVector((buttonPaddingWidth) + buttonWidth,screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "right", buttonWidth, buttonWidth, player, true);
+        Movementbutton leftButton = new Movementbutton(context, R.drawable.right_arrow, new PositionVector(buttonPaddingWidth,screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "left", buttonWidth, buttonWidth, player, false);
+        Movementbutton rightButton = new Movementbutton(context, R.drawable.left_arrow, new PositionVector((buttonPaddingWidth) + buttonWidth,screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "right", buttonWidth, buttonWidth, player, true);
 
 //        Movementbutton weaponButton = new Movementbutton(context, R.drawable.blank_button, new PositionVector(screenX - (buttonWidth/2),screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "left", buttonWidth, buttonWidth, player, true);
 //        Movementbutton jumpButton = new Movementbutton(context, R.drawable.blank_button, new PositionVector(screenX - (buttonWidth + buttonPaddingWidth + (2*buttonPaddingWidth)),screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "left", buttonWidth, buttonWidth, player, true);
@@ -285,27 +285,27 @@ public class GameView extends SurfaceView implements Runnable{
 
         switch (toolCount){
             case 0:
-                toolPickUps.add(new Background(this.getContext(), R.drawable.heisenberg,
+                toolPickUps.add(new Background(this.getContext(), R.drawable.insight_platform,
                         new PositionVector(player.getPosition().x + 500, player.getPosition().y),
-                        "idr", 100, 100));
+                        "idr", 150, 150));
                 break;
 
             case 1:
-                toolPickUps.add(new Background(this.getContext(), R.drawable.heisenberg,
+                toolPickUps.add(new Background(this.getContext(), R.drawable.insight_platform,
                         new PositionVector(player.getPosition().x + 500, player.getPosition().y),
-                        "idr", 100, 100));
+                        "idr", 150, 150));
                 break;
 
             case 2:
-                toolPickUps.add(new Background(this.getContext(), R.drawable.heisenberg,
+                toolPickUps.add(new Background(this.getContext(), R.drawable.insight_platform,
                         new PositionVector(player.getPosition().x + 500, player.getPosition().y),
-                        "idr", 100, 100));
+                        "idr", 150, 150));
                 break;
 
             case 3:
-                toolPickUps.add(new Background(this.getContext(), R.drawable.heisenberg,
+                toolPickUps.add(new Background(this.getContext(), R.drawable.insight_platform,
                         new PositionVector(player.getPosition().x + 500, player.getPosition().y),
-                        "idr", 100, 100));
+                        "idr", 150, 150));
                 break;
 
         }
