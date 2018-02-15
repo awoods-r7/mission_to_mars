@@ -16,7 +16,9 @@ import com.rapid7.awoods.mission_to_mars.GameObjects.Tool;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class Player extends LivingObject{
+import static android.icu.lang.UProperty.MATH;
+
+public class Player extends LivingObject {
 
     ArrayList<Tool> tools = new ArrayList<>();
     ArrayList<Bitmap[]> animations = new ArrayList<>();
@@ -29,6 +31,9 @@ public class Player extends LivingObject{
     int rows, columns;
     boolean pressingRight = false;
     boolean pressingLeft = false;
+    private boolean jumping = false;
+    int jumpTime = 0;
+    float ground;
 
 
     public Player(Context context, int resourceId, int rows, int columns, PositionVector position,
@@ -36,7 +41,7 @@ public class Player extends LivingObject{
         super(context, resourceId, position, name, width, height, speed, health);
         image = BitmapFactory.decodeResource(context.getResources(), resourceId);
         cutSprites(image, rows, columns);
-        moving = true;
+        moving = false;
         //gun = true;
         this.rows = rows;
         this.columns = columns;
@@ -51,17 +56,15 @@ public class Player extends LivingObject{
             //moving so keep updating the frame
             if (gun == true) {
                 currentBitmap = animations.get(1)[getCurrentFrame(columns)];
-            }
-            else {
+            } else {
                 currentBitmap = animations.get(0)[getCurrentFrame(columns)];
             }
         }
         //if still just grab the first frame
-        else{
+        else {
             if (gun == true) {
                 currentBitmap = animations.get(1)[0];
-            }
-            else {
+            } else {
                 currentBitmap = animations.get(0)[0];
             }
         }
@@ -70,18 +73,22 @@ public class Player extends LivingObject{
 
         if (isForward() == false) {
             canvas.drawBitmap(rotateBitmap(currentBitmap), getPosition().x, getPosition().y, paint);
-        }else {
+        } else {
             canvas.drawBitmap(currentBitmap, getPosition().x, getPosition().y, paint);
         }
     }
+
     @Override
     public void update(float limit) {
-        if (pressingRight){
+        if (pressingRight) {
             moveRight();
         }
 
-        if (pressingLeft){
+        if (pressingLeft) {
             moveLeft(limit);
+        }
+        if (jumping) {
+            jump();
         }
 
 
@@ -101,7 +108,7 @@ public class Player extends LivingObject{
         tools.add(tool);
     }
 
-    public void moveRight(){
+    public void moveRight() {
 
         Log.i("player", "Moving right");
         PositionVector currentPosition = getPosition();
@@ -112,23 +119,53 @@ public class Player extends LivingObject{
 
     }
 
-    public void moveLeft(float limit){
+    public void moveLeft(float limit) {
         Log.i("player", "Moving left");
         PositionVector currentPosition = getPosition();
         PositionVector newPosition = new PositionVector(currentPosition.x - getSpeed(),
                 currentPosition.y);
 
-        if (newPosition.x>limit) {
+        if (newPosition.x > limit) {
             setPosition(newPosition);
-        }
-        else {
+        } else {
             setMoving(false);
         }
 
     }
 
-    public void jump(){}
+    public void jump() {
+        //jumpTime++;
+        //float angle = (jumpTime/30.0f * (float)Math.sin(Math.toRadians(90)));
+        //PositionVector currentPosition = getPosition();
+        //if (jumpTime >=30)
+        //{
+        //    jumpTime = 0;
+        //    setJumping(false);
+        //}
+        //setPosition(new PositionVector(currentPo))
 
+        //return;
+        Log.i("player", "jumping");
+        float velocity;
+        PositionVector currentPosition = getPosition();
+        float initialY = getPosition().y;
+        if (jumpTime < 15) {
+            velocity = 5.0f;
+            jumpTime++;
+        } else {
+            velocity = -5.0f;
+
+        }
+        PositionVector newPosition;
+        if (initialY >= getGround() && velocity < 5.0f) {
+            setJumping(false);
+            jumpTime = 0;
+        }
+        else {
+                newPosition = new PositionVector(currentPosition.x, (currentPosition.y - velocity));
+            setPosition(newPosition);
+        }
+    }
 
     @Override
     public void onTouched() {
@@ -138,16 +175,13 @@ public class Player extends LivingObject{
     public void cutSprites(Bitmap bitmap, int rows, int columns) {
         int width = bitmap.getWidth() / columns;
         int height = bitmap.getHeight() / rows;
-        for (int sheetRows = 0;sheetRows < rows; sheetRows++)
-        {
+        for (int sheetRows = 0; sheetRows < rows; sheetRows++) {
             int i = 0;
             Bitmap[] bitmapArray = new Bitmap[columns];
-            for (int sheetColumns = 0;sheetColumns < columns; sheetColumns++)
-            {
+            for (int sheetColumns = 0; sheetColumns < columns; sheetColumns++) {
                 int scrX = sheetColumns * bitmap.getWidth() / columns;
                 int scrY = sheetRows * bitmap.getHeight() / rows;
-                if ( i < columns)
-                {
+                if (i < columns) {
                     Bitmap frame = Bitmap.createBitmap(bitmap, scrX, scrY, width, height);
                     bitmapArray[i] = frame;
                     i++;
@@ -158,10 +192,9 @@ public class Player extends LivingObject{
 
         }
     }
-    public int getCurrentFrame(int noOfFrames)
-    {
-        if (i > 3)
-        {
+
+    public int getCurrentFrame(int noOfFrames) {
+        if (i > 3) {
             i = 0;
             frame++;
             frame = frame % noOfFrames;
@@ -170,7 +203,7 @@ public class Player extends LivingObject{
         i++;
         return frame;
     }
-  
+
     @Override
     public void onReleased() {
 
@@ -202,7 +235,7 @@ public class Player extends LivingObject{
 
     public static Bitmap rotateBitmap(Bitmap source) {
         Matrix matrix = new Matrix();
-        matrix.postScale(-1, 1, source.getWidth()/2.0f, source.getHeight()/2.0f);
+        matrix.postScale(-1, 1, source.getWidth() / 2.0f, source.getHeight() / 2.0f);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
@@ -303,4 +336,11 @@ public class Player extends LivingObject{
     public void setColumns(int columns) {
         this.columns = columns;
     }
-}
+
+
+    public void setJumping(boolean jumping) { this.jumping = jumping;}
+
+    public void setGround(float ground) {this.ground = ground;}
+
+    public float getGround() {return ground;}
+    }

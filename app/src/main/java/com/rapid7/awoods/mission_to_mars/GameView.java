@@ -1,17 +1,13 @@
 package com.rapid7.awoods.mission_to_mars;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.rapid7.awoods.mission_to_mars.GameEngine.InputManager;
-import com.rapid7.awoods.mission_to_mars.GameObjects.Button;
 import com.rapid7.awoods.mission_to_mars.GameObjects.GameObject;
 import com.rapid7.awoods.mission_to_mars.GameObjects.MovingObject;
 import com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances.Background;
@@ -19,13 +15,10 @@ import com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances.Movementbut
 import com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances.Player;
 import com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances.ToolCollected;
 import com.rapid7.awoods.mission_to_mars.GameObjects.PositionVector;
-import com.rapid7.awoods.mission_to_mars.GameObjects.Products;
 import com.rapid7.awoods.mission_to_mars.GameObjects.Tool;
 
 import java.util.ArrayList;
 import java.util.Random;
-
-import static com.rapid7.awoods.mission_to_mars.GameObjects.Products.IDR;
 
 /**
  * Created by awoods on 14/02/18.
@@ -69,7 +62,8 @@ public class GameView extends SurfaceView implements Runnable{
 
         // Create player
         player = new Player(context, R.drawable.main_player, 2, 4, new PositionVector(0,345*ratio), "", 10,10,40,1);
-
+        float ground = 345 * ratio;
+        player.setGround(ground);
         // create scene
         GameObject background = new Background(context, R.drawable.backgroundmars, new PositionVector(0,-230), "b", 4800, screenY);
         GameObject background1 = new Background(context, R.drawable.backgroundmars, new PositionVector(0,-230), "b", 4799*2, screenY);
@@ -91,17 +85,17 @@ public class GameView extends SurfaceView implements Runnable{
         float buttonWidth = 110 * ratio;
         float buttonPaddingWidth = 20 * ratio;
         float buttonPaddingHeight = 20 * ratio;
-        Movementbutton leftButton = new Movementbutton(context, R.drawable.blank_button, new PositionVector(buttonPaddingWidth,screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "left", buttonWidth, buttonWidth, player, false);
-        Movementbutton rightButton = new Movementbutton(context, R.drawable.blank_button, new PositionVector((buttonPaddingWidth) + buttonWidth,screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "right", buttonWidth, buttonWidth, player, true);
+        Movementbutton leftButton = new Movementbutton(context, R.drawable.left_arrow, new PositionVector(buttonPaddingWidth,screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "left", buttonWidth, buttonWidth, player, false);
+        Movementbutton rightButton = new Movementbutton(context, R.drawable.right_arrow, new PositionVector((buttonPaddingWidth) + buttonWidth,screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "right", buttonWidth, buttonWidth, player, true);
 
 //        Movementbutton weaponButton = new Movementbutton(context, R.drawable.blank_button, new PositionVector(screenX - (buttonWidth/2),screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "left", buttonWidth, buttonWidth, player, true);
-//        Movementbutton jumpButton = new Movementbutton(context, R.drawable.blank_button, new PositionVector(screenX - (buttonWidth + buttonPaddingWidth + (2*buttonPaddingWidth)),screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "left", buttonWidth, buttonWidth, player, true);
+        Movementbutton jumpButton = new Movementbutton(context, R.drawable.jump_arrow, new PositionVector(screenX - (buttonWidth + buttonPaddingWidth + (2*buttonPaddingWidth)),screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "jump", buttonWidth, buttonWidth, player);
 
 
         touchableObjects.add(leftButton);
         touchableObjects.add(rightButton);
 //        touchableObjects.add(weaponButton);
-//        touchableObjects.add(jumpButton);
+        touchableObjects.add(jumpButton);
 
         inputManager = new InputManager(touchableObjects, this, new PositionVector(screenX, screenY));
 
@@ -238,7 +232,7 @@ public class GameView extends SurfaceView implements Runnable{
                 ToolCollected tc = new ToolCollected(this.getContext(), R.drawable.idr,
                         new PositionVector(player.getPosition().x + (300*ratio),
                                 player.getPosition().y + (-330*ratio)), "idr", 1000, 1000);
-
+                player.setGun(true);
                 managedAndDrawn = new ArrayList<>();
                 managedAndDrawn.add(tc);
 

@@ -13,12 +13,20 @@ import java.util.Vector;
 public class Movementbutton extends GameObject{
     Player player;
     boolean moveRight;
+    boolean jumping = false;
 
     public Movementbutton(Context context, int referenceId, PositionVector position, String name, float width, float height,
                           Player player, boolean moveRight) {
         super(context, referenceId, position, name, width, height, true);
         this.player = player;
         this.moveRight = moveRight;
+    }
+
+    public Movementbutton(Context context, int referenceId, PositionVector position, String name, float width, float height,
+                          Player player){
+        super(context, referenceId, position, name, width, height, true);
+        this.player = player;
+        this.jumping = true;
     }
 
     @Override
@@ -29,7 +37,12 @@ public class Movementbutton extends GameObject{
         player.setPressingRight(true);
         player.setForward(true);
 
-    } else {
+    }
+        else if(jumping) {
+
+            player.setJumping(true);
+        }
+        else {
         player.setPressingLeft(true);
         player.setForward(false);
     }
