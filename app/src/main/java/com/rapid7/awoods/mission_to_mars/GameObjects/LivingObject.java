@@ -1,13 +1,15 @@
 package com.rapid7.awoods.mission_to_mars.GameObjects;
 
 
+import android.graphics.Canvas;
+
 import java.util.*;
 
 public abstract class LivingObject extends MovingObject{
 
     private int health;
 
-    public LivingObject(String image, PositionVector position, String name, double width, double height, double speed, int health) {
+    public LivingObject(String image, PositionVector position, String name, float width, float height, float speed, int health) {
         super(image, position, name, width, height, speed);
         this.health = health;
 

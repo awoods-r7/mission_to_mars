@@ -1,17 +1,21 @@
 package com.rapid7.awoods.mission_to_mars.GameObjects;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+
 import java.util.Vector;
 
 public abstract class GameObject {
     private String image;
     private PositionVector position;
     private String name;
-    private double width;
-    private double height;
+    private float width;
+    private float height;
     private boolean isDraw;
     private boolean isTouchable;
 
-    public GameObject(String image, PositionVector position, String name, double width, double height) {
+    public GameObject(String image, PositionVector position, String name, float width, float height) {
 
 
         this.image = image;
@@ -22,8 +26,8 @@ public abstract class GameObject {
         this.isTouchable = false;
     }
 
-    public GameObject(String image, PositionVector position, String name, double width,
-                      double height, boolean isTouchable) {
+    public GameObject(String image, PositionVector position, String name, float width,
+                      float height, boolean isTouchable) {
 
 
         this.image = image;
@@ -35,7 +39,13 @@ public abstract class GameObject {
     }
 
     public abstract void onTouched();
-    public void draw(){};
+    public void draw(Canvas canvas){
+
+        Paint myPaint  = new Paint();
+        myPaint.setColor(Color.rgb(0,0,0));
+        canvas.drawRect(position.x, position.y + height, position.x + width, position.y, myPaint);
+
+    };
 
     public boolean containsPoint(PositionVector queryPosition){
 
@@ -76,19 +86,19 @@ public abstract class GameObject {
         this.name = name;
     }
 
-    public double getWidth() {
+    public float getWidth() {
         return width;
     }
 
-    public void setWidth(double width) {
+    public void setWidth(float width) {
         this.width = width;
     }
 
-    public double getHeight() {
+    public float getHeight() {
         return height;
     }
 
-    public void setHeight(double height) {
+    public void setHeight(float height) {
         this.height = height;
     }
 

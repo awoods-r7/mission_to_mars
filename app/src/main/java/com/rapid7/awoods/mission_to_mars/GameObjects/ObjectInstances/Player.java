@@ -1,6 +1,8 @@
 package com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances;
 
 
+import android.graphics.Canvas;
+
 import com.rapid7.awoods.mission_to_mars.GameObjects.LivingObject;
 import com.rapid7.awoods.mission_to_mars.GameObjects.PositionVector;
 import com.rapid7.awoods.mission_to_mars.GameObjects.Tool;
@@ -13,7 +15,7 @@ public class Player extends LivingObject{
     ArrayList<Tool> tools = new ArrayList<>();
 
 
-    public Player(String image, PositionVector position, String name, double width, double height, double speed, int health) {
+    public Player(String image, PositionVector position, String name, float width, float height, float speed, int health) {
         super(image, position, name, width, height, speed, health);
     }
 
@@ -57,4 +59,8 @@ public class Player extends LivingObject{
     public void jump(){}
 
 
+    @Override
+    public void onTouched() {
+
+    }
 }
