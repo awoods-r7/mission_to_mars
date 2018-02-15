@@ -24,10 +24,14 @@ public class Movementbutton extends GameObject{
     @Override
     public void onTouched() {
 
+        player.setMoving(true);
         if (moveRight) {
         player.setPressingRight(true);
+        player.setForward(true);
+
     } else {
         player.setPressingLeft(true);
+        player.setForward(false);
     }
     }
 
@@ -35,6 +39,9 @@ public class Movementbutton extends GameObject{
     public void onReleased() {
         player.setPressingLeft(false);
         player.setPressingRight(false);
+        if (player.isMoving()){
+            player.setMoving(false);
+        }
 
     }
 }
