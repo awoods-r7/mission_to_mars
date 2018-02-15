@@ -34,15 +34,16 @@ public class GameView extends SurfaceView implements Runnable{
     private Paint paint;
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
-    Bitmap bitmap, background, rocket;
+    Bitmap bitmap, rocket;
     ArrayList<GameObject> gameObjects = new ArrayList<>();
     private InputManager inputManager;
 
     ArrayList<GameObject> allObjects;
-    ArrayList<GameObject> touchableObjects;
+    ArrayList<GameObject> touchableObjects = new ArrayList<>();
     ArrayList<GameObject> ui;
     ArrayList<MovingObject> movableObjects;
     Player player;
+    Background background;
 
     float screenX;
     float screenY;
@@ -64,8 +65,8 @@ public class GameView extends SurfaceView implements Runnable{
         rocket = BitmapFactory.decodeResource(context.getResources(), R.drawable.crashed_rocket);
         rocket = Bitmap.createScaledBitmap(rocket, 500, 900, true);
 
-        player = new Player(context, R.drawable.main_player, 2, 4, new PositionVector(500,500), "", 10,10,40,1);
-        GameObject background = new Background(context, R.drawable.backgroundmars, new PositionVector(0,0), "b", 4800, screenY);
+        player = new Player(context, R.drawable.main_player, 2, 4, new PositionVector(0,550), "", 10,10,40,1);
+        background = new Background(context, R.drawable.backgroundmars, new PositionVector(0,-230), "b", 4800, screenY);
         //Movementbutton test = new Movementbutton(context, R.drawable.blank_button, new PositionVector(0,0), "", 500, 500, player, true);
         //gameObjects.add(test);
         //inputManager = new InputManager(gameObjects, this);
@@ -75,9 +76,6 @@ public class GameView extends SurfaceView implements Runnable{
         touchableObjects = new ArrayList<>();
         movableObjects = new ArrayList<>();
         ui = new ArrayList<>();
-
-
-        // player = new Player(context, R.drawable.blank_button, new PositionVector(0,30), "", 100,100,1,1);
 
         // Create buttons/ ui
 
@@ -96,15 +94,10 @@ public class GameView extends SurfaceView implements Runnable{
         touchableObjects.add(rightButton);
 //        touchableObjects.add(weaponButton);
 //        touchableObjects.add(jumpButton);
-
+        ui.addAll(touchableObjects);
+        //allObjects.add(background);
         inputManager = new InputManager(touchableObjects, this, new PositionVector(screenX, screenY));
 
-        ui.addAll(touchableObjects);
-        allObjects.add(background);
-        // Set up draw objects
-
-
-        //allObjects.addAll(touchableObjects);
     }
 
     @Override
@@ -128,43 +121,30 @@ public class GameView extends SurfaceView implements Runnable{
 
             float canvasX = canvas.getWidth();
             float canvasY = canvas.getHeight();
-            canvas.drawColor(Color.WHITE);
+            canvas.drawColor(Color.rgb(163, 118, 46));
             canvas.translate(0, 0);
-
-
             //adding background
-            //canvas.drawBitmap(background, 0, 0, paint);
 
-//            for (GameObject uiObject:ui) {
-//                uiObject.draw(canvas, paint);
-//            }
+            for (GameObject uiObject:ui) {
+                uiObject.draw(canvas, paint);
 
+            }
             canvas.translate(-player.getPosition().x, 0);
-            
-
+            canvas.save();
+            background.draw(canvas, paint);
             //adding rocket
            // canvas.drawBitmap(rocket, 0, -26, paint);
 
-            for (GameObject object: allObjects) {
+            //for (GameObject object: allObjects) {
                // paint.setColor(Color.BLACK);
-                object.draw(canvas, paint);
-
-            }
+                //object.draw(canvas, paint);
+            //}
 
             player.draw(canvas, paint);
 
-    //        for (GameObject object: gameObjects) {
-      //          paint.setColor(Color.BLACK);
-  //              object.draw(canvas, paint);
-//
-            //}
-            player.update();
             canvas.translate(0, 0);
 
-           // player.draw(canvas, paint);
-            for (GameObject uiObject:ui) {
-                uiObject.draw(canvas, paint);
-            }
+            player.update();
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
 
