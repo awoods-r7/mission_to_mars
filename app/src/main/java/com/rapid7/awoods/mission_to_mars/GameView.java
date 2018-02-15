@@ -13,10 +13,12 @@ import android.view.SurfaceView;
 import com.rapid7.awoods.mission_to_mars.GameEngine.InputManager;
 import com.rapid7.awoods.mission_to_mars.GameObjects.Button;
 import com.rapid7.awoods.mission_to_mars.GameObjects.GameObject;
+import com.rapid7.awoods.mission_to_mars.GameObjects.LivingObject;
 import com.rapid7.awoods.mission_to_mars.GameObjects.MovingObject;
 import com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances.Background;
 import com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances.Movementbutton;
 import com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances.Player;
+import com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances.SlugEnemy;
 import com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances.ToolCollected;
 import com.rapid7.awoods.mission_to_mars.GameObjects.PositionVector;
 import com.rapid7.awoods.mission_to_mars.GameObjects.Products;
@@ -50,6 +52,8 @@ public class GameView extends SurfaceView implements Runnable{
     ArrayList<GameObject> ui;
     ArrayList<GameObject> toolPickUps;
     ArrayList<MovingObject> movableObjects;
+    ArrayList<SlugEnemy> livingObjects;
+    Background safeRocket;
     Player player;
     int count = 0;
 
@@ -76,6 +80,7 @@ public class GameView extends SurfaceView implements Runnable{
         //GameObject background3 = new Background(context, R.drawable.backgroundmars, new PositionVector(0,0), "b", -4799, screenY);
         GameObject rocket = new Background(context, R.drawable.crashed_rocket, new PositionVector(60*ratio, -500*ratio), "rocket", 300*ratio, 900*ratio);
 
+        SlugEnemy slimyMcFeatures = new SlugEnemy(context, R.drawable.left_arrow, new PositionVector(500, 360*ratio), "", 30, 30, 1,1);
 
         allObjects = new ArrayList<>();
         backgrounds = new ArrayList<>();
@@ -84,6 +89,8 @@ public class GameView extends SurfaceView implements Runnable{
         ui = new ArrayList<>();
         this.toolPickUps = new ArrayList<>();
         managedAndDrawn = new ArrayList<>();
+        livingObjects = new ArrayList<>();
+        livingObjects = new ArrayList<>();
 
 
         // Create buttons/ ui
@@ -93,6 +100,9 @@ public class GameView extends SurfaceView implements Runnable{
         float buttonPaddingHeight = 20 * ratio;
         Movementbutton leftButton = new Movementbutton(context, R.drawable.right_arrow, new PositionVector(buttonPaddingWidth,screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "left", buttonWidth, buttonWidth, player, false);
         Movementbutton rightButton = new Movementbutton(context, R.drawable.left_arrow, new PositionVector((buttonPaddingWidth) + buttonWidth,screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "right", buttonWidth, buttonWidth, player, true);
+
+
+        safeRocket = new Background(context, R.drawable.rocket_man, new PositionVector(16000*ratio, -40*ratio), "rocket", 500*ratio, 500*ratio);
 
 //        Movementbutton weaponButton = new Movementbutton(context, R.drawable.blank_button, new PositionVector(screenX - (buttonWidth/2),screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "left", buttonWidth, buttonWidth, player, true);
 //        Movementbutton jumpButton = new Movementbutton(context, R.drawable.blank_button, new PositionVector(screenX - (buttonWidth + buttonPaddingWidth + (2*buttonPaddingWidth)),screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "left", buttonWidth, buttonWidth, player, true);
@@ -106,9 +116,12 @@ public class GameView extends SurfaceView implements Runnable{
         inputManager = new InputManager(touchableObjects, this, new PositionVector(screenX, screenY));
 
         ui.addAll(touchableObjects);
+        allObjects.add(safeRocket);
         allObjects.add(rocket);
         backgrounds.add(background);
         backgrounds.add(background1);
+
+        livingObjects.add(slimyMcFeatures);
         // Set up draw objects
 
     }
@@ -130,6 +143,16 @@ public class GameView extends SurfaceView implements Runnable{
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
 
+            //for (SlugEnemy enemy: livingObjects) {
+                //enemy.draw(canvas, paint);
+
+
+              // if(player.getPosition().x +15> enemy.getPosition().x){
+                    //enemy.attack();
+                    //enemy.setRising(true);
+               //}
+
+           // }
             if (player.getPosition().x > backgrounds.get(0).getPosition().x + 4799) {
 
                 GameObject b = backgrounds.get(0);
@@ -143,9 +166,13 @@ public class GameView extends SurfaceView implements Runnable{
                 Random rand = new Random();
                 int n = rand.nextInt(5);
 
-                if (n<3 && count <4) {
-                    generateTool(count, player);
+                if (n<4 && count <4) {
+                    generateTool(count, player, backgrounds.get(0).getPosition().x + 4799);
                 }
+            }
+
+            if(player.getPosition().x>safeRocket.getPosition().x){
+                pickUpTool(player, 4);
             }
 
             canvas = surfaceHolder.lockCanvas();
@@ -277,34 +304,44 @@ public class GameView extends SurfaceView implements Runnable{
 
                 break;
 
+            case 4:
+                player.addTool(new Tool("IDR", "Identify and respond to threats"));
+                ToolCollected tc4 = new ToolCollected(this.getContext(), R.drawable.completed,
+                        new PositionVector(player.getPosition().x + (300*ratio),
+                                player.getPosition().y + (-330*ratio)), "idr", 1000, 1000);
+
+                managedAndDrawn = new ArrayList<>();
+                managedAndDrawn.add(tc4);
+
+                break;
 
         }
     }
 
-    private void generateTool(int toolCount, Player player) {
+    private void generateTool(int toolCount, Player player, float x) {
 
         switch (toolCount){
             case 0:
                 toolPickUps.add(new Background(this.getContext(), R.drawable.insight_platform,
-                        new PositionVector(player.getPosition().x + 500, player.getPosition().y),
+                        new PositionVector(x, player.getPosition().y),
                         "idr", 150, 150));
                 break;
 
             case 1:
                 toolPickUps.add(new Background(this.getContext(), R.drawable.insight_platform,
-                        new PositionVector(player.getPosition().x + 500, player.getPosition().y),
+                        new PositionVector(x, player.getPosition().y),
                         "idr", 150, 150));
                 break;
 
             case 2:
                 toolPickUps.add(new Background(this.getContext(), R.drawable.insight_platform,
-                        new PositionVector(player.getPosition().x + 500, player.getPosition().y),
+                        new PositionVector(x, player.getPosition().y),
                         "idr", 150, 150));
                 break;
 
             case 3:
                 toolPickUps.add(new Background(this.getContext(), R.drawable.insight_platform,
-                        new PositionVector(player.getPosition().x + 500, player.getPosition().y),
+                        new PositionVector(x, player.getPosition().y),
                         "idr", 150, 150));
                 break;
 
