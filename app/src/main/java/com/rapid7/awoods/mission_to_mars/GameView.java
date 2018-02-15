@@ -39,11 +39,13 @@ public class GameView extends SurfaceView implements Runnable{
 
     private Paint paint;
     private Canvas canvas;
-    private SurfaceHolder surfaceHolder;;
+    private SurfaceHolder surfaceHolder;
+    Bitmap bitmap, rocket;
     ArrayList<GameObject> gameObjects = new ArrayList<>();
     private InputManager inputManager;
-
+  
     ArrayList<GameObject> allObjects;
+    ArrayList<GameObject> touchableObjects = new ArrayList<>();
     ArrayList<GameObject> managedAndDrawn;
     ArrayList<GameObject> touchableObjects;
     ArrayList<GameObject> backgrounds;
@@ -51,6 +53,7 @@ public class GameView extends SurfaceView implements Runnable{
     ArrayList<GameObject> toolPickUps;
     ArrayList<MovingObject> movableObjects;
     Player player;
+    Background background;
     int count = 0;
 
     float screenX;
@@ -70,12 +73,16 @@ public class GameView extends SurfaceView implements Runnable{
         // Create player
         player = new Player(context, R.drawable.main_player, 2, 4, new PositionVector(0,350*ratio), "", 10,10,40,1);
 
+        player = new Player(context, R.drawable.main_player, 2, 4, new PositionVector(0,550), "", 10,10,40,1);
+        //background = new Background(context, R.drawable.backgroundmars, new PositionVector(0,-230), "b", 4800, screenY);
+        //Movementbutton test = new Movementbutton(context, R.drawable.blank_button, new PositionVector(0,0), "", 500, 500, player, true);
+        //gameObjects.add(test);
+        //inputManager = new InputManager(gameObjects, this);
         // create scene
         GameObject background = new Background(context, R.drawable.backgroundmars, new PositionVector(0,0), "b", 4800, screenY);
         GameObject background1 = new Background(context, R.drawable.backgroundmars, new PositionVector(0,0), "b", 4799*2, screenY);
         //GameObject background3 = new Background(context, R.drawable.backgroundmars, new PositionVector(0,0), "b", -4799, screenY);
         GameObject rocket = new Background(context, R.drawable.crashed_rocket, new PositionVector(60*ratio, -400*ratio), "rocket", 300*ratio, 900*ratio);
-
 
         allObjects = new ArrayList<>();
         backgrounds = new ArrayList<>();
@@ -84,7 +91,6 @@ public class GameView extends SurfaceView implements Runnable{
         ui = new ArrayList<>();
         this.toolPickUps = new ArrayList<>();
         managedAndDrawn = new ArrayList<>();
-
 
         // Create buttons/ ui
 
@@ -102,14 +108,12 @@ public class GameView extends SurfaceView implements Runnable{
         touchableObjects.add(rightButton);
 //        touchableObjects.add(weaponButton);
 //        touchableObjects.add(jumpButton);
-
-        inputManager = new InputManager(touchableObjects, this, new PositionVector(screenX, screenY));
-
         ui.addAll(touchableObjects);
+        //allObjects.add(background);
+        inputManager = new InputManager(touchableObjects, this, new PositionVector(screenX, screenY));
         allObjects.add(rocket);
         backgrounds.add(background);
         backgrounds.add(background1);
-        // Set up draw objects
 
     }
 
@@ -150,17 +154,30 @@ public class GameView extends SurfaceView implements Runnable{
 
             canvas = surfaceHolder.lockCanvas();
 
+            float canvasX = canvas.getWidth();
+            float canvasY = canvas.getHeight();
+            canvas.drawColor(Color.rgb(163, 118, 46));
             canvas.drawColor(Color.WHITE);
             canvas.translate(0, 0);
-
-
             //adding background
 
+            for (GameObject uiObject:ui) {
+                uiObject.draw(canvas, paint);
             for (GameObject uiObject : ui) {
                 uiObject.draw(canvas, paint);
             }
 
+            }
             canvas.translate(-player.getPosition().x, 0);
+            canvas.save();
+            background.draw(canvas, paint);
+            //adding rocket
+           // canvas.drawBitmap(rocket, 0, -26, paint);
+
+            //for (GameObject object: allObjects) {
+               // paint.setColor(Color.BLACK);
+                //object.draw(canvas, paint);
+            //}
 
 
             for (GameObject object : backgrounds) {
@@ -195,6 +212,9 @@ public class GameView extends SurfaceView implements Runnable{
 
             player.draw(canvas, paint);
 
+            canvas.translate(0, 0);
+
+            player.update();
             player.update(backgrounds.get(0).getPosition().x);
             canvas.translate(0, 0);
 

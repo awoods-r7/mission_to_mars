@@ -29,6 +29,7 @@ public class Player extends LivingObject{
     int rows, columns;
     boolean pressingRight = false;
     boolean pressingLeft = false;
+    private float positionDelta;
 
 
     public Player(Context context, int resourceId, int rows, int columns, PositionVector position,
@@ -107,7 +108,7 @@ public class Player extends LivingObject{
         PositionVector currentPosition = getPosition();
         PositionVector newPosition = new PositionVector(currentPosition.x + getSpeed(),
                 currentPosition.y);
-
+        setPositionDelta(getSpeed());
         setPosition(newPosition);
 
     }
@@ -117,6 +118,8 @@ public class Player extends LivingObject{
         PositionVector currentPosition = getPosition();
         PositionVector newPosition = new PositionVector(currentPosition.x - getSpeed(),
                 currentPosition.y);
+        setPositionDelta(-getSpeed());
+        setPosition(newPosition);
 
         if (newPosition.x>limit) {
             setPosition(newPosition);
@@ -127,7 +130,10 @@ public class Player extends LivingObject{
 
     }
 
-    public void jump(){}
+    public void jump(){
+        PositionVector currentPosition = getPosition();
+        PositionVector newPosition = new PositionVector(currentPosition.x,currentPosition.y);// + get vertical speed
+    }
 
 
     @Override
@@ -302,5 +308,14 @@ public class Player extends LivingObject{
     @Override
     public void setColumns(int columns) {
         this.columns = columns;
+    }
+
+    public void setPositionDelta(float positionDelta)
+    {
+        this.positionDelta = positionDelta;
+    }
+
+    public float getPositionDelta(){
+        return positionDelta;
     }
 }
