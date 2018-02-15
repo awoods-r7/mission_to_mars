@@ -36,6 +36,7 @@ public class GameView extends SurfaceView implements Runnable{
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
+        resume();
         //player = new Player(context, screenX, screenY);
         //bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
         //canvas.drawBitmap(bitmap, 50, 50, paint);
@@ -63,7 +64,7 @@ public class GameView extends SurfaceView implements Runnable{
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
             canvas = surfaceHolder.lockCanvas();
-           // canvas.drawColor(Color.WHITE);
+            canvas.drawColor(Color.WHITE);
 
             //canvas.drawBitmap(
                     //player.getBitmap(),
