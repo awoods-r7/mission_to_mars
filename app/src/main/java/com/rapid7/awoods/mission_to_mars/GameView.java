@@ -43,8 +43,12 @@ public class GameView extends SurfaceView implements Runnable{
         surfaceHolder = getHolder();
         paint = new Paint();
 
-        Player player = new Player("", new PositionVector(0,0), "", 0,0,0,1);
-        Movementbutton test = new Movementbutton("", new PositionVector(0,0), "", 10, 10, player, true);
+        //BACKGROUND IMAGE
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.backgroundmars);
+        bitmap = Bitmap.createScaledBitmap(bitmap, 4800, screenY, true);
+
+        Player player = new Player(context, R.drawable., new PositionVector(0,0), "", 100,100,0,1);
+        Movementbutton test = new Movementbutton("", new PositionVector(0,0), "", 550, 510, player, true);
         gameObjects.add(test);
     }
 
@@ -66,7 +70,8 @@ public class GameView extends SurfaceView implements Runnable{
             canvas = surfaceHolder.lockCanvas();
             canvas.drawColor(Color.WHITE);
 
-            //canvas.drawBitmap(
+            canvas.drawBitmap(
+                    bitmap, 0, 0, paint);
                     //player.getBitmap(),
                     //player.getX(),
                     //player.getY(),

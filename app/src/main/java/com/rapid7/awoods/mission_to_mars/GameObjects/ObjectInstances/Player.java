@@ -1,6 +1,7 @@
 package com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances;
 
 
+import android.content.Context;
 import android.graphics.Canvas;
 
 import com.rapid7.awoods.mission_to_mars.GameObjects.LivingObject;
@@ -13,10 +14,14 @@ import java.util.Vector;
 public class Player extends LivingObject{
 
     ArrayList<Tool> tools = new ArrayList<>();
+    Canvas playerCanvas;
 
 
-    public Player(String image, PositionVector position, String name, float width, float height, float speed, int health) {
-        super(image, position, name, width, height, speed, health);
+
+    public Player(Context context, int referenceId, PositionVector position, String name, float width, float height, float speed, int health) {
+        super(context, referenceId, position, name, width, height, speed, health);
+        playerCanvas = context;
+        animationLoad(context);
     }
 
     @Override
@@ -39,7 +44,6 @@ public class Player extends LivingObject{
     }
 
     public void moveRight(){
-
         PositionVector currentPosition = getPosition();
         PositionVector newPosition = new PositionVector(currentPosition.x + getSpeed(),
                 currentPosition.y);
@@ -61,6 +65,10 @@ public class Player extends LivingObject{
 
     @Override
     public void onTouched() {
+
+    }
+
+    public void animationLoad(Canvas canvas){
 
     }
 }

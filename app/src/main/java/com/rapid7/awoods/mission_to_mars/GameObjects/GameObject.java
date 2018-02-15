@@ -1,5 +1,8 @@
 package com.rapid7.awoods.mission_to_mars.GameObjects;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -7,18 +10,20 @@ import android.graphics.Paint;
 import java.util.Vector;
 
 public abstract class GameObject {
-    private String image;
+    private Bitmap image;
     private PositionVector position;
     private String name;
     private float width;
     private float height;
     private boolean isDraw;
     private boolean isTouchable;
+    private int rows;
+    private int columns;
 
-    public GameObject(String image, PositionVector position, String name, float width, float height) {
+    public GameObject(Context context, int resourceId, PositionVector position, String name, float width, float height) {
 
-
-        this.image = image;
+        this.image = BitmapFactory.decodeResource(context.getResources(), resourceId);
+        this.image = Bitmap.createScaledBitmap(this.image, (int)width, (int)height, true);
         this.position = position;
         this.name = name;
         this.width = width;
@@ -26,16 +31,30 @@ public abstract class GameObject {
         this.isTouchable = false;
     }
 
-    public GameObject(String image, PositionVector position, String name, float width,
+    public GameObject(Context context, int resourceId, PositionVector position, String name, float width,
                       float height, boolean isTouchable) {
 
-
-        this.image = image;
+        this.image = BitmapFactory.decodeResource(context.getResources(), resourceId);
+        this.image = Bitmap.createScaledBitmap(this.image, (int)width, (int)height, true);
         this.position = position;
         this.name = name;
         this.width = width;
         this.height = height;
         this.isTouchable = isTouchable;
+    }
+
+    //for player
+    public GameObject(Context context, int rows, int columns, int resourceId, PositionVector position,
+                      String name, float width, float height)
+    {
+        this.rows = rows;
+        this.columns = columns;
+        this.image = BitmapFactory.decodeResource(context.getResources(), resourceId);
+        this.image = Bitmap.createScaledBitmap(this.image, (int)width, (int)height, true);
+        this.position = position;
+        this.name = name;
+        this.width = width;
+        this.height = height;
     }
 
     public abstract void onTouched();
@@ -47,27 +66,18 @@ public abstract class GameObject {
 
     };
 
-    public boolean containsPoint(PositionVector queryPosition){
+    public boolean containsPoint(PositionVector queryPosition) {
 
         // check y
-        if((position.y + height) < queryPosition.y && position.y < queryPosition.y) {
+        if ((position.y + height) < queryPosition.y && position.y < queryPosition.y) {
 
             // check x
-            if((position.x + width) < queryPosition.x && position.x < queryPosition.x) {
+            if ((position.x + width) < queryPosition.x && position.x < queryPosition.x) {
                 return true;
             }
         }
 
         return false;
-        }
-
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public PositionVector getPosition() {
