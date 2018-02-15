@@ -33,6 +33,7 @@ public class GameView extends SurfaceView implements Runnable{
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
     Bitmap bitmap;
+    Player player;
     ArrayList<GameObject> gameObjects = new ArrayList<>();
     private InputManager inputManager;
 
@@ -44,7 +45,7 @@ public class GameView extends SurfaceView implements Runnable{
         this.setTop(screenY);
         this.setLeft(screenX);
 
-        Player player = new Player(context, R.drawable.blank_button, new PositionVector(0,0), "", 10,10,0,1);
+        player = new Player(context, R.drawable.main_player, 2, 5, new PositionVector(500,500), "", 10,10,0,1);
         Movementbutton test = new Movementbutton(context, R.drawable.blank_button, new PositionVector(0,0), "", 500, 500, player, true);
         gameObjects.add(test);
         inputManager = new InputManager(gameObjects, this);
@@ -67,7 +68,8 @@ public class GameView extends SurfaceView implements Runnable{
         if (surfaceHolder.getSurface().isValid()) {
             canvas = surfaceHolder.lockCanvas();
             canvas.drawColor(Color.WHITE);
-
+            //make the man runnnnnnnnnnnnnnn
+            player.draw(canvas, paint);
             //canvas.drawBitmap(
                     //player.getBitmap(),
                     //player.getX(),
