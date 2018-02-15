@@ -68,13 +68,13 @@ public class GameView extends SurfaceView implements Runnable{
         ratio = screenX/screenY;
 
         // Create player
-        player = new Player(context, R.drawable.main_player, 2, 4, new PositionVector(0,350*ratio), "", 10,10,40,1);
+        player = new Player(context, R.drawable.main_player, 2, 4, new PositionVector(0,345*ratio), "", 10,10,40,1);
 
         // create scene
-        GameObject background = new Background(context, R.drawable.backgroundmars, new PositionVector(0,0), "b", 4800, screenY);
-        GameObject background1 = new Background(context, R.drawable.backgroundmars, new PositionVector(0,0), "b", 4799*2, screenY);
+        GameObject background = new Background(context, R.drawable.backgroundmars, new PositionVector(0,-230), "b", 4800, screenY);
+        GameObject background1 = new Background(context, R.drawable.backgroundmars, new PositionVector(0,-230), "b", 4799*2, screenY);
         //GameObject background3 = new Background(context, R.drawable.backgroundmars, new PositionVector(0,0), "b", -4799, screenY);
-        GameObject rocket = new Background(context, R.drawable.crashed_rocket, new PositionVector(60*ratio, -400*ratio), "rocket", 300*ratio, 900*ratio);
+        GameObject rocket = new Background(context, R.drawable.crashed_rocket, new PositionVector(60*ratio, -500*ratio), "rocket", 300*ratio, 900*ratio);
 
 
         allObjects = new ArrayList<>();
@@ -88,7 +88,7 @@ public class GameView extends SurfaceView implements Runnable{
 
         // Create buttons/ ui
 
-        float buttonWidth = 120 * ratio;
+        float buttonWidth = 110 * ratio;
         float buttonPaddingWidth = 20 * ratio;
         float buttonPaddingHeight = 20 * ratio;
         Movementbutton leftButton = new Movementbutton(context, R.drawable.blank_button, new PositionVector(buttonPaddingWidth,screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "left", buttonWidth, buttonWidth, player, false);
@@ -134,7 +134,7 @@ public class GameView extends SurfaceView implements Runnable{
 
                 GameObject b = backgrounds.get(0);
                 backgrounds.remove(0);
-                b.setPosition(new PositionVector(backgrounds.get(0).getPosition().x + 4799,0.0f));
+                b.setPosition(new PositionVector(backgrounds.get(0).getPosition().x + 4799,-230.0f));
 
                 backgrounds.add(
                       b
@@ -150,7 +150,7 @@ public class GameView extends SurfaceView implements Runnable{
 
             canvas = surfaceHolder.lockCanvas();
 
-            canvas.drawColor(Color.WHITE);
+            canvas.drawColor(Color.rgb(163, 118, 46));
             canvas.translate(0, 0);
 
 
@@ -185,8 +185,8 @@ public class GameView extends SurfaceView implements Runnable{
                 // paint.setColor(Color.BLACK);
                 object.draw(canvas, paint);
 
-                if (player.getPosition().x > object.getPosition().x){
-                    toolPickUps.remove(object);
+                if (player.getPosition().x > object.getPosition().x && object.isDraw()){
+                    object.setDraw(false);
                     pickUpTool(player, count);
                     count++;
                 }
@@ -198,10 +198,6 @@ public class GameView extends SurfaceView implements Runnable{
             player.update(backgrounds.get(0).getPosition().x);
             canvas.translate(0, 0);
 
-            // player.draw(canvas, paint);
-            for (GameObject uiObject : ui) {
-                uiObject.draw(canvas, paint);
-            }
             surfaceHolder.unlockCanvasAndPost(canvas);
 
             for (GameObject object: managedAndDrawn) {
