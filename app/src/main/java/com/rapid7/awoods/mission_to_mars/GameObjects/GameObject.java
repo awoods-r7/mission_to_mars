@@ -18,6 +18,8 @@ public abstract class GameObject {
     private float height;
     private boolean isDraw;
     private boolean isTouchable;
+    private int rows;
+    private int columns;
 
     public GameObject(Context context, int resourceId, PositionVector position,
                       String name, float width, float height) {
@@ -42,6 +44,20 @@ public abstract class GameObject {
         this.width = width;
         this.height = height;
         this.isTouchable = isTouchable;
+    }
+
+    //for player
+    public GameObject(Context context, int rows, int columns, int resourceId, PositionVector position,
+                      String name, float width, float height)
+    {
+        this.rows = rows;
+        this.columns = columns;
+        this.image = BitmapFactory.decodeResource(context.getResources(), resourceId);
+        this.image = Bitmap.createScaledBitmap(this.image, (int)width, (int)height, true);
+        this.position = position;
+        this.name = name;
+        this.width = width;
+        this.height = height;
     }
 
     public abstract void onTouched();
