@@ -1,5 +1,6 @@
 package com.rapid7.awoods.mission_to_mars.GameEngine;
 
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -14,8 +15,9 @@ public class InputManager implements OnTouchListener {
     ArrayList<GameObject> managedTouchObjects;
     private float scaleX = 1, scaleY = 1;
 
-    public InputManager(ArrayList<GameObject> managedTouchObjects){
+    public InputManager(ArrayList<GameObject> managedTouchObjects, View view){
         this.managedTouchObjects = managedTouchObjects;
+        view.setOnTouchListener(this);
     }
 
     @Override
@@ -25,9 +27,11 @@ public class InputManager implements OnTouchListener {
             case MotionEvent.ACTION_DOWN:
                 for (GameObject object : managedTouchObjects) {
                     if (object.isTouchable()) {
-                        if (object.containsPoint(new PositionVector(motionEvent.getX() * scaleX,
-                                motionEvent.getY() * scaleY))) {
+                        PositionVector touchPosition = new PositionVector(motionEvent.getX() * scaleX,
+                                motionEvent.getY() * scaleY);
+                        if (object.containsPoint(touchPosition)) {
                             object.onTouched();
+                            Log.i("dsd", "Ryan here");
                         }
                     }
                 }

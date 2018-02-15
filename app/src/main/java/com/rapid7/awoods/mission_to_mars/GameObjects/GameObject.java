@@ -1,5 +1,8 @@
 package com.rapid7.awoods.mission_to_mars.GameObjects;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -7,7 +10,8 @@ import android.graphics.Paint;
 import java.util.Vector;
 
 public abstract class GameObject {
-    private String image;
+    private Bitmap image;
+
     private PositionVector position;
     private String name;
     private float width;
@@ -15,10 +19,11 @@ public abstract class GameObject {
     private boolean isDraw;
     private boolean isTouchable;
 
-    public GameObject(String image, PositionVector position, String name, float width, float height) {
+    public GameObject(Context context, int resourceId, PositionVector position,
+                      String name, float width, float height) {
 
-
-        this.image = image;
+        this.image = BitmapFactory.decodeResource(context.getResources(), resourceId);
+        this.image = Bitmap.createScaledBitmap(this.image, (int)width, (int)height, true);
         this.position = position;
         this.name = name;
         this.width = width;
@@ -26,11 +31,12 @@ public abstract class GameObject {
         this.isTouchable = false;
     }
 
-    public GameObject(String image, PositionVector position, String name, float width,
+    public GameObject(Context context, int resourceId, PositionVector position, String name, float width,
                       float height, boolean isTouchable) {
 
 
-        this.image = image;
+        this.image = BitmapFactory.decodeResource(context.getResources(), resourceId);
+        this.image = Bitmap.createScaledBitmap(this.image, (int)width, (int)height, true);
         this.position = position;
         this.name = name;
         this.width = width;
@@ -39,12 +45,8 @@ public abstract class GameObject {
     }
 
     public abstract void onTouched();
-    public void draw(Canvas canvas){
-
-        Paint myPaint  = new Paint();
-        myPaint.setColor(Color.rgb(0,0,0));
-        canvas.drawRect(position.x, position.y + height, position.x + width, position.y, myPaint);
-
+    public void draw(Canvas canvas, Paint paint){
+        canvas.drawBitmap(image, position.x, position.y, paint);
     };
 
     public boolean containsPoint(PositionVector queryPosition){
@@ -61,14 +63,6 @@ public abstract class GameObject {
         return false;
         }
 
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
 
     public PositionVector getPosition() {
         return position;

@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.rapid7.awoods.mission_to_mars.GameEngine.InputManager;
 import com.rapid7.awoods.mission_to_mars.GameObjects.Button;
 import com.rapid7.awoods.mission_to_mars.GameObjects.GameObject;
 import com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances.Movementbutton;
@@ -33,19 +34,20 @@ public class GameView extends SurfaceView implements Runnable{
     private SurfaceHolder surfaceHolder;
     Bitmap bitmap;
     ArrayList<GameObject> gameObjects = new ArrayList<>();
+    private InputManager inputManager;
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
         resume();
-        //player = new Player(context, screenX, screenY);
-        //bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
-        //canvas.drawBitmap(bitmap, 50, 50, paint);
         surfaceHolder = getHolder();
         paint = new Paint();
+        this.setTop(screenY);
+        this.setLeft(screenX);
 
-        Player player = new Player("", new PositionVector(0,0), "", 0,0,0,1);
-        Movementbutton test = new Movementbutton("", new PositionVector(0,0), "", 10, 10, player, true);
+        Player player = new Player(context, R.drawable.blank_button, new PositionVector(0,0), "", 10,10,0,1);
+        Movementbutton test = new Movementbutton(context, R.drawable.blank_button, new PositionVector(0,0), "", 500, 500, player, true);
         gameObjects.add(test);
+        inputManager = new InputManager(gameObjects, this);
     }
 
     @Override
@@ -72,7 +74,8 @@ public class GameView extends SurfaceView implements Runnable{
                     //player.getY(),
                     //paint);
             for (GameObject object: gameObjects) {
-                object.draw(canvas);
+                paint.setColor(Color.BLACK);
+                object.draw(canvas, paint);
 
             }
             surfaceHolder.unlockCanvasAndPost(canvas);
@@ -99,19 +102,5 @@ public class GameView extends SurfaceView implements Runnable{
         playing = true;
         gameThread = new Thread(this);
         gameThread.start();
-    }
-
-
-    @Override
-    public boolean onTouchEvent(MotionEvent motionEvent) {
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_UP:
-                //player.stopBoosting();
-                break;
-            case MotionEvent.ACTION_DOWN:
-                //player.setBoosting();
-                break;
-        }
-        return true;
     }
 }
