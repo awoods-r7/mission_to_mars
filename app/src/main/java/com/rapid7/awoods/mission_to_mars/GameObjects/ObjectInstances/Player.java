@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.rapid7.awoods.mission_to_mars.GameObjects.LivingObject;
 import com.rapid7.awoods.mission_to_mars.GameObjects.PositionVector;
@@ -25,6 +26,8 @@ public class Player extends LivingObject{
     int i = 0;
     int frame = 0;
     int rows, columns;
+    boolean pressingRight = false;
+    boolean pressingLeft = false;
 
     public Player(Context context, int resourceId, int rows, int columns, PositionVector position,
                   String name, float width, float height, float speed, int health) {
@@ -37,7 +40,6 @@ public class Player extends LivingObject{
         this.columns = columns;
         this.width = width;
         this.height = height;
-
     }
 
 
@@ -66,6 +68,14 @@ public class Player extends LivingObject{
     }
     @Override
     public void update() {
+        if (pressingRight){
+            moveRight();
+        }
+
+        if (pressingLeft){
+            moveLeft();
+        }
+
 
     }
 
@@ -85,6 +95,7 @@ public class Player extends LivingObject{
 
     public void moveRight(){
 
+        Log.i("player", "Moving right");
         PositionVector currentPosition = getPosition();
         PositionVector newPosition = new PositionVector(currentPosition.x + getSpeed(),
                 currentPosition.y);
@@ -93,7 +104,7 @@ public class Player extends LivingObject{
     }
 
     public void moveLeft(){
-
+        Log.i("player", "Moving left");
         PositionVector currentPosition = getPosition();
         PositionVector newPosition = new PositionVector(currentPosition.x - getSpeed(),
                 currentPosition.y);
@@ -143,5 +154,34 @@ public class Player extends LivingObject{
         }
         i++;
         return frame;
+    }
+  
+    @Override
+    public void onReleased() {
+
+    }
+
+    public ArrayList<Tool> getTools() {
+        return tools;
+    }
+
+    public void setTools(ArrayList<Tool> tools) {
+        this.tools = tools;
+    }
+
+    public boolean isPressingRight() {
+        return pressingRight;
+    }
+
+    public void setPressingRight(boolean pressingRight) {
+        this.pressingRight = pressingRight;
+    }
+
+    public boolean isPressingLeft() {
+        return pressingLeft;
+    }
+
+    public void setPressingLeft(boolean pressingLeft) {
+        this.pressingLeft = pressingLeft;
     }
 }

@@ -13,6 +13,7 @@ import android.view.SurfaceView;
 import com.rapid7.awoods.mission_to_mars.GameEngine.InputManager;
 import com.rapid7.awoods.mission_to_mars.GameObjects.Button;
 import com.rapid7.awoods.mission_to_mars.GameObjects.GameObject;
+import com.rapid7.awoods.mission_to_mars.GameObjects.MovingObject;
 import com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances.Movementbutton;
 import com.rapid7.awoods.mission_to_mars.GameObjects.ObjectInstances.Player;
 import com.rapid7.awoods.mission_to_mars.GameObjects.PositionVector;
@@ -37,7 +38,12 @@ public class GameView extends SurfaceView implements Runnable{
     ArrayList<GameObject> gameObjects = new ArrayList<>();
     private InputManager inputManager;
 
-    public GameView(Context context, int screenX, int screenY) {
+    ArrayList<GameObject> allObjects;
+    ArrayList<GameObject> touchableObjects;
+    ArrayList<MovingObject> movableObjects;
+    Player player;
+
+    public GameView(Context context, float screenX, float screenY) {
         super(context);
         resume();
         surfaceHolder = getHolder();
@@ -56,6 +62,38 @@ public class GameView extends SurfaceView implements Runnable{
         //Movementbutton test = new Movementbutton(context, R.drawable.blank_button, new PositionVector(0,0), "", 500, 500, player, true);
         //gameObjects.add(test);
         inputManager = new InputManager(gameObjects, this);
+
+        allObjects = new ArrayList<>();
+        touchableObjects = new ArrayList<>();
+        movableObjects = new ArrayList<>();
+
+
+        player = new Player(context, R.drawable.blank_button, new PositionVector(0,30), "", 100,100,1,1);
+
+        // Create buttons/ ui
+
+        float ratio = screenX/screenY;
+        float buttonWidth = 120 * ratio;
+        float buttonPaddingWidth = 20 * ratio;
+        float buttonPaddingHeight = 20 * ratio;
+        Movementbutton leftButton = new Movementbutton(context, R.drawable.blank_button, new PositionVector(buttonPaddingWidth,screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "left", buttonWidth, buttonWidth, player, false);
+        Movementbutton rightButton = new Movementbutton(context, R.drawable.blank_button, new PositionVector((buttonPaddingWidth) + buttonWidth,screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "right", buttonWidth, buttonWidth, player, true);
+//
+//        Movementbutton weaponButton = new Movementbutton(context, R.drawable.blank_button, new PositionVector(screenX - (buttonWidth/2),screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "left", buttonWidth, buttonWidth, player, true);
+//        Movementbutton jumpButton = new Movementbutton(context, R.drawable.blank_button, new PositionVector(screenX - (buttonWidth + buttonPaddingWidth + (2*buttonPaddingWidth)),screenY - (buttonWidth/2*ratio) - buttonPaddingHeight), "left", buttonWidth, buttonWidth, player, true);
+
+
+        touchableObjects.add(leftButton);
+        touchableObjects.add(rightButton);
+//        touchableObjects.add(weaponButton);
+//        touchableObjects.add(jumpButton);
+
+        inputManager = new InputManager(touchableObjects, this, new PositionVector(screenX, screenY));
+
+        // Set up draw objects
+
+        allObjects.addAll(touchableObjects);
+        allObjects.add(player);
     }
 
     @Override
@@ -68,11 +106,12 @@ public class GameView extends SurfaceView implements Runnable{
     }
 
     private void update() {
-        //player.update();
+
     }
 
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
+
             canvas = surfaceHolder.lockCanvas();
             canvas.drawColor(Color.WHITE);
             //make the man runnnnnnnnnnnnnnn
@@ -85,14 +124,20 @@ public class GameView extends SurfaceView implements Runnable{
 
             player.draw(canvas, paint);
 
-
     //        for (GameObject object: gameObjects) {
       //          paint.setColor(Color.BLACK);
   //              object.draw(canvas, paint);
 //
             //}
+            for (GameObject object: allObjects) {
+                paint.setColor(Color.BLACK);
+                object.draw(canvas, paint);
+
+            }
+            player.update();
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
+
     }
 
     private void control() {
@@ -116,4 +161,6 @@ public class GameView extends SurfaceView implements Runnable{
         gameThread = new Thread(this);
         gameThread.start();
     }
+
+
 }

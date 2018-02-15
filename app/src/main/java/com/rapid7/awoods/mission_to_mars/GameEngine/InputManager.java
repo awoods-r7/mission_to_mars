@@ -14,28 +14,47 @@ public class InputManager implements OnTouchListener {
 
     ArrayList<GameObject> managedTouchObjects;
     private float scaleX = 1, scaleY = 1;
+    PositionVector position;
 
-    public InputManager(ArrayList<GameObject> managedTouchObjects, View view){
+    public InputManager(ArrayList<GameObject> managedTouchObjects, View view, PositionVector position){
         this.managedTouchObjects = managedTouchObjects;
         view.setOnTouchListener(this);
+        this.position = position;
     }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
 
+        float ratio = position.x/position.y;
         switch (motionEvent.getAction() & motionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 for (GameObject object : managedTouchObjects) {
+                    Log.i("down action", object.getName());
                     if (object.isTouchable()) {
-                        PositionVector touchPosition = new PositionVector(motionEvent.getX() * scaleX,
-                                motionEvent.getY() * scaleY);
+                        PositionVector touchPosition = new PositionVector(motionEvent.getX(),
+                                motionEvent.getY());
                         if (object.containsPoint(touchPosition)) {
+                            Log.i("down action", object.getName());
                             object.onTouched();
-                            Log.i("dsd", "Ryan here");
                         }
                     }
                 }
                 break;
+
+            case MotionEvent.ACTION_UP:
+                for (GameObject object : managedTouchObjects) {
+                    if (object.isTouchable()) {
+                        PositionVector touchPosition = new PositionVector((motionEvent.getX()),
+                                motionEvent.getY());
+                        if (object.containsPoint(touchPosition)) {
+                            Log.i("up action", object.getName());
+                            object.onReleased();
+                        }
+                    }
+                }
+                break;
+
+
         }
         return true;
     }

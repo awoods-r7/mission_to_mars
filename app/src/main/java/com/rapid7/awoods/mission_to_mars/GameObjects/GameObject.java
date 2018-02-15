@@ -61,6 +61,7 @@ public abstract class GameObject {
     }
 
     public abstract void onTouched();
+    public abstract void onReleased();
     public void draw(Canvas canvas, Paint paint){
         canvas.drawBitmap(image, position.x, position.y, paint);
     };
@@ -68,10 +69,10 @@ public abstract class GameObject {
     public boolean containsPoint(PositionVector queryPosition){
 
         // check y
-        if((position.y + height) < queryPosition.y && position.y < queryPosition.y) {
+        if((position.y + height) > queryPosition.y && position.y < queryPosition.y) {
 
             // check x
-            if((position.x + width) < queryPosition.x && position.x < queryPosition.x) {
+            if((position.x + width) > queryPosition.x && position.x < queryPosition.x) {
                 return true;
             }
         }
